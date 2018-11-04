@@ -8,9 +8,8 @@ defmodule TaskTracker.Tasks.Task do
     field :desc, :string
     field :time_spent, :integer
     field :title, :string
-    field :user_id, :id
 
-    belongs_to :user TaskTracker.Users.User
+    belongs_to :user, TaskTracker.Users.User
 
     timestamps()
   end

@@ -8,7 +8,7 @@ defmodule TaskTracker.Users.User do
     field :email, :string
     field :password_hash, :string
 
-    has_many :tasks TaskTracker.Tasks.Task
+    has_many :task, TaskTracker.Tasks.Task
 
     timestamps()
   end
