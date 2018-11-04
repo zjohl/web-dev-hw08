@@ -11,7 +11,7 @@ config :logger, level: :warn
 
 # Configure your database
 config :task_tracker, TaskTracker.Repo,
-  username: "postgres",
+  username: "task_tracker",
   password: "postgres",
   database: "task_tracker_test",
   hostname: "localhost",
