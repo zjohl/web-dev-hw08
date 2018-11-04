@@ -15,7 +15,7 @@ mix phx.digest
 
 MIX_ENV=prod mix release
 
-_build/prod/rel/hw07/bin/hw07 stop || true
+_build/prod/rel/task_tracker/bin/task_tracker stop || true
 
-_build/prod/rel/hw07/bin/hw07 start
+_build/prod/rel/task_tracker/bin/task_tracker start
 

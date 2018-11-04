@@ -18,7 +18,7 @@ use Mix.Releases.Config,
 
 # Function to manage secrets from nat's lecture notes
 get_secret = fn name ->
-  base = Path.expand("~/.config/hw07")
+  base = Path.expand("~/.config/hw08")
   File.mkdir_p!(base)
   path = Path.join(base, name)
   unless File.exists?(path) do
@@ -51,8 +51,8 @@ end
 # when running `mix release`, the first release in the file
 # will be used by default
 
-release :hw07 do
-  set version: current_version(:hw07)
+release :task_tracker do
+  set version: current_version(:task_tracker)
   set applications: [
     :runtime_tools
   ]
