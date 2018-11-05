@@ -3,7 +3,7 @@ defmodule TaskTrackerWeb.PageController do
 
   def index(conn, _params) do
     tasks = TaskTracker.Tasks.list_tasks()
-            |> Enum.map(&(Map.take(&1, [:id, :title, :desc, :completed, :time_spent])))
+            |> Enum.map(&(Map.take(&1, [:id, :title, :desc, :completed, :time_spent, :user_id])))
     render(conn, "index.html", tasks: tasks)
   end
 end

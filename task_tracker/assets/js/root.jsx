@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import $ from 'jquery';
+import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 
 export default function root_init(node) {
     let tasks = window.tasks;
@@ -19,8 +20,17 @@ class Root extends React.Component {
 
     render() {
         return <div>
-            <Header />
-            <TaskList tasks={this.state.tasks} />
+            <Router>
+                <div>
+                    <Header/>
+                    <Route path="/" exact={true} render={() =>
+                        <TaskList tasks={this.state.tasks}/>
+                    }/>
+                    <Route path="/users" exact={true} render={() =>
+                        <div>User list</div>
+                    }/>
+                </div>
+            </Router>
         </div>;
     }
 }
@@ -42,9 +52,11 @@ function Header(_props) {
 
 function TaskList(props) {
     let tasks = _.map(props.tasks, (task) => <Task key={task.id} task={task} />);
-    return <div className="row">
+    return <div>
+        <h1>All Tasks</h1>
+        <div className="row">
         {tasks}
-    </div>;
+    </div></div>;
 }
 
 function Task(props) {
