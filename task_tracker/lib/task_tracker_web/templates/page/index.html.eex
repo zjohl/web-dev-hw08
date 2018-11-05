@@ -4,5 +4,8 @@
       <p>React component loading...</p>
     </div>
   </div>
+  <script>
+   window.tasks = <%= raw Jason.encode!(@tasks) %>;
+  </script>
 </div>
 
