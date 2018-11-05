@@ -52,20 +52,33 @@ function Header(_props) {
 
 function TaskList(props) {
     let tasks = _.map(props.tasks, (task) => <Task key={task.id} task={task} />);
-    return <div>
-        <h1>All Tasks</h1>
-        <div className="row">
+    return <div className="row">
+        <h1 className="col-12">All Tasks</h1>
+        <div className="col-12">
         {tasks}
     </div></div>;
 }
 
+function taskCompleted(e) {
+    let id = e.target.getAttribute('data-task-id');
+}
+
+function timeSpentChanged(e) {
+    let id = e.target.getAttribute('data-task-id');
+}
+
 function Task(props) {
     let {task} = props;
-    return <div className="card col-4">
-        <div className="card-body">
-            <h2 className="card-title">{task.title}</h2>
-            <p className="card-text">{task.desc} <br/>
-                time_spent: {task.time_spent}</p>
-        </div>
+    let completed = task.completed;
+    return <div className="row">
+            <h2 className="task-title col 4">{task.title}</h2>
+            <p className="col-4">{task.desc}</p>
+
+            <div className="col-2">
+                <input type="number" data-task-id={task.id} onChange={timeSpentChanged} step={15} min={0} value={task.timeSpent}/>
+            </div>
+            <div className="col-2">
+                <input type="checkbox" className="form-control" data-task-id={task.id} name="completed" value={completed} checked={completed} onChange={taskCompleted}/>
+            </div>
     </div>;
 }
