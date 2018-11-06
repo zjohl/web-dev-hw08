@@ -79,11 +79,12 @@ function userOptions(users) {
 function NewTask(props) {
     let {session, users} = props;
     let authenticated = session && session.token;
-    if(!authenticated) {
-        alert("You're not allowed to do that!")
-    }
 
     function create_task(ev) {
+        if(!authenticated) {
+            alert("You're not allowed to do that!")
+        }
+
         api.create_task({task: {
             user_id: parseInt($('#user-input').val()),
             title: $('#title-input').val(),
