@@ -12,6 +12,8 @@ defmodule TaskTrackerWeb.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
+
+    user_params = Map.merge(user_params, %{"password_hash" => Argon2.hash_pwd_salt(user_params["password"])})
     with {:ok, %User{} = user} <- Users.create_user(user_params) do
       conn
       |> put_status(:created)

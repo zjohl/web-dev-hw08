@@ -36,6 +36,18 @@ class Server {
         );
     }
 
+    create_user(user_data) {
+        $.ajax("/api/v1/users/", {
+            method: "post",
+            dataType: "json",
+            contentType: "application/json; charset=UTF-8",
+            data: JSON.stringify(user_data),
+            success: (resp) => {
+                this.fetch_users();
+            }
+        });
+    }
+
     create_task(task_data) {
         $.ajax("/api/v1/tasks/", {
             method: "post",
