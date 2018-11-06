@@ -3,19 +3,26 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import $ from 'jquery';
 import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
 
-export default function root_init(node) {
+import api from './api';
+import UserList from './user_list';
+import TaskList from './task_list';
+
+export default function root_init(node, store) {
     let tasks = window.tasks;
-    ReactDOM.render(<Root tasks={tasks} />, node);
+    ReactDOM.render(
+        <Provider store={store}>
+            <Root tasks={tasks} />
+        </Provider>, node);
 }
 
 class Root extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            tasks: props.tasks,
-        };
 
+        api.fetch_tasks();
+        api.fetch_users();
     }
 
     render() {
@@ -24,10 +31,10 @@ class Root extends React.Component {
                 <div>
                     <Header/>
                     <Route path="/" exact={true} render={() =>
-                        <TaskList tasks={this.state.tasks}/>
+                        <TaskList />
                     }/>
                     <Route path="/users" exact={true} render={() =>
-                        <div>User list</div>
+                        <UserList />
                     }/>
                 </div>
             </Router>
@@ -37,8 +44,11 @@ class Root extends React.Component {
 
 function Header(_props) {
     return <div className="row my-2">
-        <div className="col-6">
-            <h1>Task Tracker</h1>
+        <div className="col-4">
+            <h1><Link to={"/"} onClick={() => api.fetch_tasks()}>Task Tracker</Link></h1>
+        </div>
+        <div className="col-2">
+            <p><Link to={"/users"} onClick={() => api.fetch_users()}>Users</Link></p>
         </div>
         <div className="col-6">
             <div className="form-inline my-2">
@@ -47,38 +57,5 @@ function Header(_props) {
                 <button className="btn btn-secondary">Login</button>
             </div>
         </div>
-    </div>;
-}
-
-function TaskList(props) {
-    let tasks = _.map(props.tasks, (task) => <Task key={task.id} task={task} />);
-    return <div className="row">
-        <h1 className="col-12">All Tasks</h1>
-        <div className="col-12">
-        {tasks}
-    </div></div>;
-}
-
-function taskCompleted(e) {
-    let id = e.target.getAttribute('data-task-id');
-}
-
-function timeSpentChanged(e) {
-    let id = e.target.getAttribute('data-task-id');
-}
-
-function Task(props) {
-    let {task} = props;
-    let completed = task.completed;
-    return <div className="row">
-            <h2 className="task-title col 4">{task.title}</h2>
-            <p className="col-4">{task.desc}</p>
-
-            <div className="col-2">
-                <input type="number" data-task-id={task.id} onChange={timeSpentChanged} step={15} min={0} value={task.timeSpent}/>
-            </div>
-            <div className="col-2">
-                <input type="checkbox" className="form-control" data-task-id={task.id} name="completed" value={completed} checked={completed} onChange={taskCompleted}/>
-            </div>
     </div>;
 }
