@@ -24,6 +24,8 @@ defmodule TaskTrackerWeb.Router do
   scope "/api/v1", TaskTrackerWeb do
     pipe_through :api
 
+    resources "/sessions", SessionController, only: [:create]
+
     resources "/users", UserController, except: [:new, :edit]
     resources "/tasks", TaskController, except: [:new, :edit]
   end

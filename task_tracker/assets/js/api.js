@@ -36,6 +36,18 @@ class Server {
         );
     }
 
+    create_task(task_data) {
+        $.ajax("/api/v1/tasks/", {
+            method: "post",
+            dataType: "json",
+            contentType: "application/json; charset=UTF-8",
+            data: JSON.stringify(task_data),
+            success: (resp) => {
+                this.fetch_tasks();
+            }
+        });
+    }
+
     update_task(task_id, task_data) {
         $.ajax(`/api/v1/tasks/${task_id}`, {
             method: "put",

@@ -1,5 +1,5 @@
 # From Nat Tuck's lecture notes
-defmodule TaskTracker.SessionController do
+defmodule TaskTrackerWeb.SessionController do
   use TaskTrackerWeb, :controller
   alias TaskTracker.Users.User
   alias TaskTracker.Users

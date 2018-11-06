@@ -42,6 +42,12 @@ class Root extends React.Component {
     }
 }
 
+function login() {
+    api.create_session($('#email_form').val(), $('#password_form').val());
+    $('#email_form').val("");
+    $('#password_form').val("");
+}
+
 function Header(_props) {
     return <div className="row my-2">
         <div className="col-4">
@@ -52,9 +58,9 @@ function Header(_props) {
         </div>
         <div className="col-6">
             <div className="form-inline my-2">
-                <input type="email" placeholder="email" />
-                <input type="password" placeholder="password" />
-                <button className="btn btn-secondary">Login</button>
+                <input id="email_form" type="email" placeholder="email" />
+                <input id="password_form" type="password" placeholder="password" />
+                <button className="btn btn-secondary" onClick={login}>Login</button>
             </div>
         </div>
     </div>;
