@@ -23,4 +23,4 @@ function User(props) {
     </tr>;
 }
 
-export default connect((state) => {return {users: state.users};})(UserList);
+export default connect((state) => {return {users: state.users, session: state.session};})(UserList);

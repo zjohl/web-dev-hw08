@@ -5,20 +5,20 @@ import _ from 'lodash';
 import api from './api';
 
 function TaskList(props) {
-    let authenticated = true;//session && session.token;
 
-    let tasks = _.map(_.sortBy(props.tasks, 'id'), (task) => <Task authenticated={authenticated} key={task.id} task={task} dispatch={props.dispatch}/>);
+    let tasks = _.map(_.sortBy(props.tasks, 'id'), (task) => <Task session={props.session} key={task.id} task={task} dispatch={props.dispatch}/>);
     return <div className="row">
         <h1 className="col-12">All Tasks</h1>
         <div className="col-12">
             {tasks}
-            <NewTask authenticated={authenticated}/>
+            <NewTask session={props.session}/>
         </div>
     </div>;
 }
 
 function Task(props) {
-    let {task, dispatch, authenticated} = props;
+    let {task, dispatch, session} = props;
+    let authenticated = session && session.token;
 
     function title_changed(ev) {
         api.update_task(task.id, {task: _.assign({}, task, {title: ev.target.value })});
@@ -53,24 +53,37 @@ function Task(props) {
 }
 
 function NewTask(props) {
-    let {authenticated} = props;
+    let {session} = props;
+    let authenticated = session && session.token;
 
     function create_task(ev) {
-        // Need user id to create task
+        api.create_task({task: {
+            user_id: session.user_id,
+            title: $('#title-input').val(),
+            desc: $('#desc-input').val(),
+            time_spent: $('#time-spent-input').val(),
+            completed: $('#completed-input').checked,
+        }});
+
+        debugger;
+        $('#title-input').val("");
+        $('#desc-input').val("");
+        $('#time-spent-input').val("");
+        $('#completed-input').checked = false;
     }
 
     return <div className="row">
         <div className="col-3">
-            <input type="text" className="form-control" name="title" required >
+            <input type="text" id="title-input" className="form-control" name="title" required />
         </div>
         <div className="col-5">
-            <input type="text" className="form-control" name="desc" required />
+            <input type="text" id="desc-input" className="form-control" name="desc" required />
         </div>
         <div className="col-2">
-            <input type="number" className="form-control" name="time_spent" step={15} min={0} />
+            <input type="number" id="time-spent-input" className="form-control" name="time_spent" step={15} min={0} />
         </div>
         <div className="col-2">
-            <input type="checkbox" className="form-control" name="completed" />
+            <input type="checkbox" id="completed-input" className="form-control" name="completed" />
         </div>
         <div className="my-2">
             <button className="btn btn-secondary" disabled={!authenticated} onClick={create_task}>Create Task</button>
@@ -78,4 +91,4 @@ function NewTask(props) {
     </div>;
 }
 
-export default connect((state) => {return {tasks: state.tasks};})(TaskList);
+export default connect((state) => {return {tasks: state.tasks, session: state.session};})(TaskList);
