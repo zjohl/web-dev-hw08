@@ -9,6 +9,11 @@ function UserList(props) {
     return <div className="row">
         <div className="col-12">
             <table className="table table-striped">
+                <thead>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Admin</th>
+                </thead>
                 <tbody>
                     {users}
                     <NewUser session={props.session} />
@@ -22,6 +27,7 @@ function User(props) {
     let {user} = props;
     return <tr>
         <td>{user.email}</td>
+        <td></td>
         <td>{user.admin}</td>
     </tr>;
 }
