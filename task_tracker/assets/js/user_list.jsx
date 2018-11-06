@@ -10,9 +10,11 @@ function UserList(props) {
         <div className="col-12">
             <table className="table table-striped">
                 <thead>
-                    <th>Email</th>
-                    <th>Password</th>
-                    <th>Admin</th>
+                    <tr>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th>Admin</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {users}

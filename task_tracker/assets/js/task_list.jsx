@@ -6,26 +6,33 @@ import api from './api';
 
 function TaskList(props) {
 
-    let tasks = _.map(_.sortBy(props.tasks, 'id'), (task) => <Task session={props.session} key={task.id} task={task} dispatch={props.dispatch}/>);
+    function userFor(task) {
+        return _.find(props.users, (user) => user.id === task.user_id)
+    }
+
+    let tasks = _.map(_.sortBy(props.tasks, 'id'), (task) => <Task session={props.session} key={task.id} task={task} user={userFor(task)} dispatch={props.dispatch}/>);
     return <div className="row">
         <h1 className="col-12">All Tasks</h1>
         <table className="table table-striped">
             <thead>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Minutes Spent</th>
-                <th>Completed</th>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Minutes Spent</th>
+                    <th>User</th>
+                    <th>Completed</th>
+                </tr>
             </thead>
             <tbody>
                 {tasks}
-                <NewTask session={props.session}/>
+                <NewTask session={props.session} users={props.users}/>
             </tbody>
         </table>
     </div>;
 }
 
 function Task(props) {
-    let {task, dispatch, session} = props;
+    let {task, dispatch, session, user} = props;
     let authenticated = session && session.token;
 
     function title_changed(ev) {
@@ -54,14 +61,23 @@ function Task(props) {
         <td >
             <input type="number" className="form-control" name="time_spent" step={15} min={0} value={task.time_spent} disabled={!authenticated} onChange={time_spent_changed}/>
         </td>
+        <td>
+            <p>{user ? user.email : "No assigned user"}</p>
+        </td>
         <td >
             <input type="checkbox" className="form-control" name="completed" checked={task.completed} disabled={!authenticated} onChange={completed_changed}/>
         </td>
     </tr>;
 }
 
+function userOptions(users) {
+    return _.map(users, (user) => {
+        return <option value={user.id} key={user.id}>{user.email}</option>
+    });
+}
+
 function NewTask(props) {
-    let {session} = props;
+    let {session, users} = props;
     let authenticated = session && session.token;
     if(!authenticated) {
         alert("You're not allowed to do that!")
@@ -69,7 +85,7 @@ function NewTask(props) {
 
     function create_task(ev) {
         api.create_task({task: {
-            user_id: parseInt(session.user_id),
+            user_id: parseInt($('#user-input').val()),
             title: $('#title-input').val(),
             desc: $('#desc-input').val(),
             time_spent: $('#time-spent-input').val(),
@@ -93,7 +109,12 @@ function NewTask(props) {
                 <input type="text" id="desc-input" className="form-control" name="desc" required />
             </td>
             <td >
-                <input type="number" id="time-spent-input" className="form-control" name="time_spent" step={15} min={0} value="0"/>
+                <input type="number" id="time-spent-input" className="form-control" name="time_spent" step={15} min={0} defaultValue="0"/>
+            </td>
+            <td >
+                <select defaultValue={session ? session.user_id : 0} id="user-input" className="form-control" name="user">
+                    {userOptions(users)}
+                </select>
             </td>
             <td >
                 <input type="checkbox" id="completed-input" className="form-control" name="completed" />
@@ -103,4 +124,4 @@ function NewTask(props) {
     </Aux>;
 }
 
-export default connect((state) => {return {tasks: state.tasks, session: state.session};})(TaskList);
+export default connect((state) => {return {tasks: state.tasks, users: state.users, session: state.session};})(TaskList);
