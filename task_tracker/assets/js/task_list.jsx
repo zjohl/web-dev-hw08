@@ -63,17 +63,19 @@ function Task(props) {
 function NewTask(props) {
     let {session} = props;
     let authenticated = session && session.token;
+    if(!authenticated) {
+        alert("You're not allowed to do that!")
+    }
 
     function create_task(ev) {
         api.create_task({task: {
-            user_id: session.user_id,
+            user_id: parseInt(session.user_id),
             title: $('#title-input').val(),
             desc: $('#desc-input').val(),
             time_spent: $('#time-spent-input').val(),
             completed: $('#completed-input').checked,
         }});
 
-        debugger;
         $('#title-input').val("");
         $('#desc-input').val("");
         $('#time-spent-input').val("");
@@ -91,7 +93,7 @@ function NewTask(props) {
                 <input type="text" id="desc-input" className="form-control" name="desc" required />
             </td>
             <td >
-                <input type="number" id="time-spent-input" className="form-control" name="time_spent" step={15} min={0} />
+                <input type="number" id="time-spent-input" className="form-control" name="time_spent" step={15} min={0} value="0"/>
             </td>
             <td >
                 <input type="checkbox" id="completed-input" className="form-control" name="completed" />

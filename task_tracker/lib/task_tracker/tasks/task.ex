@@ -17,7 +17,7 @@ defmodule TaskTracker.Tasks.Task do
   @doc false
   def changeset(task, attrs) do
     task
-    |> cast(attrs, [:title, :desc, :completed, :time_spent])
-    |> validate_required([:title, :desc, :completed, :time_spent])
+    |> cast(attrs, [:title, :desc, :completed, :time_spent, :user_id])
+    |> validate_required([:title, :desc, :completed, :time_spent, :user_id])
   end
 end
