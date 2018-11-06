@@ -17,10 +17,10 @@ config :task_tracker, TaskTrackerWeb.Endpoint,
   url: [host: "tasks3.zamirjohl.com", port: 443],
   https: [
      :inet6,
-     port: 443,
+     port: 8443,
      cipher_suite: :strong,
-     keyfile: System.get_env("/etc/letsencrypt/live/tasks3.zamirjohl.com/privkey.pem"),
-     certfile: System.get_env("/etc/letsencrypt/live/tasks3.zamirjohl.com/fullchain.pem")
+     keyfile: "priv/privkey.pem",
+     certfile: "priv/fullchain.pem"
   ],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
