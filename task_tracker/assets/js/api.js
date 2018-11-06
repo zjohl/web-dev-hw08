@@ -1,7 +1,19 @@
 import store from './store';
+import Cookies from 'js-cookie';
 // From Nat Tuck's lecture notes
 
 class Server {
+    get_session() {
+        let token = Cookies.get('token');
+        let user_id = Cookies.get('user_id');
+        if (token && user_id) {
+            store.dispatch({
+                type: 'NEW_SESSION',
+                data: {token: token, user_id: user_id},
+            });
+        }
+    }
+
     fetch_path(path, callback) {
         $.ajax(path, {
             method: "get",
@@ -91,12 +103,21 @@ class Server {
             "/api/v1/sessions",
             {email, password},
             (resp) => {
+                debugger;
+                Cookies.set('token', resp.data.token, { expires: 7 });
+                Cookies.set('user_id', resp.data.user_id, { expires: 7 });
                 store.dispatch({
                     type: 'NEW_SESSION',
                     data: resp.data,
                 });
             }
         );
+    }
+
+    delete_session() {
+        Cookies.remove('token');
+        Cookies.remove('user_id');
+        store.dispatch({type: 'CLEAR_SESSION'});
     }
 }
 
