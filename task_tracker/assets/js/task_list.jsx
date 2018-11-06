@@ -5,7 +5,7 @@ import _ from 'lodash';
 import api from './api';
 
 function TaskList(props) {
-    let tasks = _.map(props.tasks, (task) => <Task key={task.id} task={task} />);
+    let tasks = _.map(_.sortBy(props.tasks, 'id'), (task) => <Task key={task.id} task={task} dispatch={props.dispatch}/>);
     return <div className="row">
         <h1 className="col-12">All Tasks</h1>
         <div className="col-12">
@@ -14,36 +14,36 @@ function TaskList(props) {
 }
 
 function Task(props) {
-    let {task} = props;
-    let completed = task.completed;
+    let {task, dispatch} = props;
 
-    function timeSpentChanged(ev) {  // <=
-        let action = {
-            type: 'UPDATE_TIME_SPENT',
-            task_id: task.id,
-            time_spent: ev.target.value,
-        };
-        dispatch(action);
+    function title_changed(ev) {
+        api.update_task(task.id, {task: _.assign({}, task, {title: ev.target.value })});
     }
 
-    function taskCompleted(ev) {  // <=
-        let action = {
-            type: 'UPDATE_COMPLETED',
-            task_id: task.id,
-            completed: ev.target.value,
-        };
-        dispatch(action);
+    function desc_changed(ev) {
+        api.update_task(task.id, {task: _.assign({}, task, {desc: ev.target.value })});
+    }
+
+    function time_spent_changed(ev) {
+        api.update_task(task.id, {task: _.assign({}, task, {time_spent: ev.target.value })});
+    }
+
+    function completed_changed(ev) {
+        api.update_task(task.id, {task: _.assign({}, task, {completed: ev.target.checked })});
     }
 
     return <div className="row">
-        <h2 className="task-title col 4">{task.title}</h2>
-        <p className="col-4">{task.desc}</p>
-
-        <div className="col-2">
-            <input type="number" data-task-id={task.id} onChange={timeSpentChanged} step={15} min={0} value={task.timeSpent}/>
+        <div className="col-3">
+            <input type="text" className="form-control" name="title" value={task.title} onChange={title_changed}/>
+        </div>
+        <div className="col-5">
+            <input type="text" className="form-control" name="desc" value={task.desc} onChange={desc_changed}/>
         </div>
         <div className="col-2">
-            <input type="checkbox" className="form-control" data-task-id={task.id} name="completed" value={completed} checked={completed} onChange={taskCompleted}/>
+            <input type="number" className="form-control" name="time_spent" step={15} min={0} value={task.time_spent} onChange={time_spent_changed}/>
+        </div>
+        <div className="col-2">
+            <input type="checkbox" className="form-control" name="completed" checked={task.completed} onChange={completed_changed}/>
         </div>
     </div>;
 }

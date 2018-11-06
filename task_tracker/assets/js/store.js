@@ -15,6 +15,8 @@ function tasks(state = [], action) {
     switch (action.type) {
         case 'TASK_LIST':
             return action.data;
+        case 'TASK_UPDATED':
+            return _.concat(_.filter(state, (task) => task.id !== action.task_id ), action.data.task);
         default:
             return state;
     }

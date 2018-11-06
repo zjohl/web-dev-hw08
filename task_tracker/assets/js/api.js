@@ -36,6 +36,22 @@ class Server {
         );
     }
 
+    update_task(task_id, task_data) {
+        $.ajax(`/api/v1/tasks/${task_id}`, {
+            method: "put",
+            dataType: "json",
+            contentType: "application/json; charset=UTF-8",
+            data: JSON.stringify(task_data),
+            success: (resp) => {
+                store.dispatch({
+                    type: 'TASK_UPDATED',
+                    task_id: task_id,
+                    data: task_data
+                });
+            }
+        });
+    }
+
     send_post(path, data, callback) {
         $.ajax(path, {
             method: "post",
