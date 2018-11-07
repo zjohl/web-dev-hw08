@@ -61,11 +61,12 @@ class Server {
     }
 
     create_task(task_data) {
+        let state = store.getState();
         $.ajax("/api/v1/tasks/", {
             method: "post",
             dataType: "json",
             contentType: "application/json; charset=UTF-8",
-            data: JSON.stringify(task_data),
+            data: JSON.stringify(_.merge(task_data, {token: state.session.token})),
             success: (resp) => {
                 this.fetch_tasks();
             }

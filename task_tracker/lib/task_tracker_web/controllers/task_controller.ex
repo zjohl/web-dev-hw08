@@ -11,12 +11,20 @@ defmodule TaskTrackerWeb.TaskController do
     render(conn, "index.json", tasks: tasks)
   end
 
-  def create(conn, %{"task" => task_params}) do
-    with {:ok, %Task{} = task} <- Tasks.create_task(task_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", Routes.task_path(conn, :show, task))
-      |> render("show.json", task: task)
+  def create(conn, %{"task" => task_params, "token" => token}) do
+    result = Phoenix.Token.verify(TaskTrackerWeb.Endpoint, "user_id", token, max_age: 86400)
+
+    case result do
+      {:ok, _} ->
+        with {:ok, %Task{} = task} <- Tasks.create_task(task_params) do
+          conn
+          |> put_status(:created)
+          |> put_resp_header("location", Routes.task_path(conn, :show, task))
+          |> render("show.json", task: task)
+        end
+      _ ->
+        conn
+        |> put_status(:not_authorized)
     end
   end
 
